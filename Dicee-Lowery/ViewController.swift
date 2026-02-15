@@ -1,14 +1,19 @@
 //
 //  ViewController.swift
-//  Dicee-iOS13
+//  Dicee-Lowery
 //
-//  Created by Angela Yu on 11/06/2019.
+// Initially created by Angela Yu on 11/06/2019.
 // Edited by Christian Lowery on 2/11/2026
-//  Copyright © 2019 London App Brewery. All rights reserved.
+// Copyright © 2019 London App Brewery. All rights reserved.
 //
 
+// Three Enhancements I Added To The Dicee App:
+// 1. We added multiple dices! The first row shows the classic 2 dices, the second row shows 7 dices that roll from 1-6, and the third is 7-sided dices!
+// 2. We added randomized backgrounds! The background changes every roll using an array of background images!
+// 3. We added a sum-displayer by collecting the value of the dices! Each is made sure to add up correctly and this was the most logic-centric part!
+// We also tried to add sound, but the copy-path was not cooperating!
+
 import UIKit
-import AVFoundation
 
 class ViewController: UIViewController {
     
@@ -37,28 +42,17 @@ class ViewController: UIViewController {
     @IBOutlet weak var specialDiceImageView1: UIImageView!
     @IBOutlet weak var specialDiceImageView2: UIImageView!
     
-    // Sound Player
-    var audioPlayer: AVAudioPlayer?
-    func playSound() {
-        guard let url = Bundle.main.url(forResource: "dragon_ball_z_tele.mp3", withExtension: "mp3") else { return }
-        do {
-            audioPlayer = try AVAudioPlayer(contentsOf: url)
-            audioPlayer?.play()
-        } catch {
-            print("Error - oops! No sound made!")
-        }
-    }
-    
-    
-    
     @IBAction func rollButtonPressed(_ sender: UIButton) {
         //-----------------------------------------------------------------------------------------
         // TYPE #imageLiteral(
         // to use images as values!
         
-        let backGroundImages = [#imageLiteral(resourceName: "Background 1.5"), #imageLiteral(resourceName: "Background2"), #imageLiteral(resourceName: "Background3"), #imageLiteral(resourceName: "Background4"), #imageLiteral(resourceName: "Background5"), #imageLiteral(resourceName: "Background6")]
+        let backGroundImages = [#imageLiteral(resourceName: "Background1"), #imageLiteral(resourceName: "Background2"), #imageLiteral(resourceName: "Background3"), #imageLiteral(resourceName: "Background4"), #imageLiteral(resourceName: "Background5"), #imageLiteral(resourceName: "Background6")]
         let diceArray = [#imageLiteral(resourceName: "Dice1"),#imageLiteral(resourceName: "Dice2"),#imageLiteral(resourceName: "Dice3"),#imageLiteral(resourceName: "Dice4"),#imageLiteral(resourceName: "Dice5"),#imageLiteral(resourceName: "Dice6"),#imageLiteral(resourceName: "Dice7")]
-        playSound()
+        
+        //-----------------------------------------------------------------------------------------
+        // Set Background
+        backgroundImageView.image = backGroundImages[Int.random(in: 0...5)]
         
         //-----------------------------------------------------------------------------------------
         // Reset Counters for Sums
@@ -73,6 +67,9 @@ class ViewController: UIViewController {
         var sumOfMiniDice = 0
         var randomizeSpecialDice = [0,0]
         var sumOfSpecialDice = 0
+        
+        //-----------------------------------------------------------------------------------------
+        // Set Sums
         
         for roll in 0..<randomizeTwoDice.count
         {
@@ -93,24 +90,18 @@ class ViewController: UIViewController {
         }
         
         //-----------------------------------------------------------------------------------------
-        // Special Variable for Dice #1 with Background #
-        
-        let randomizeBackground = randomizeTwoDice[0]
-        
-        //-----------------------------------------------------------------------------------------
-        // Set Background from Special Variable randomFirstDiceAndBackground
-        backgroundImageView.image = backGroundImages[randomizeBackground]
+        // Display Sums
+        twoDiceSum.text = "\(sumOfTwoDice)"
+        miniDiceSum.text = "\(sumOfMiniDice)"
+        specialDiceSum.text = "\(sumOfSpecialDice)"
         
         //-----------------------------------------------------------------------------------------
-        // Main Two Dices - Dice # 1 is special, because it sets up the background based on what is rolled here!
+        // Display Main Two Dices
         diceImageView1.image = diceArray[randomizeTwoDice[0]]
         diceImageView2.image = diceArray[randomizeTwoDice[1]]
-        
-        // Grab The Sum Of The First Two Dices Using Hash Values
-        twoDiceSum.text = "\(sumOfTwoDice)"
-        
+                
         //-----------------------------------------------------------------------------------------
-        // Mini Seven Dices
+        // Display Mini Seven Dices
         subDiceImageView1.image = diceArray[randomizeMiniDice[0]]
         subDiceImageView2.image = diceArray[randomizeMiniDice[1]]
         subDiceImageView3.image = diceArray[randomizeMiniDice[2]]
@@ -118,16 +109,10 @@ class ViewController: UIViewController {
         subDiceImageView5.image = diceArray[randomizeMiniDice[4]]
         subDiceImageView6.image = diceArray[randomizeMiniDice[5]]
         subDiceImageView7.image = diceArray[randomizeMiniDice[6]]
-        
-        // Grab The Sum Of The Seven Dices Using Hash Values
-        miniDiceSum.text = "\(sumOfMiniDice)"
-        
+                
         //-----------------------------------------------------------------------------------------
-        // Special Two Dices
+        // Display Special Two Dices
         specialDiceImageView1.image = diceArray[randomizeSpecialDice[0]]
         specialDiceImageView2.image = diceArray[randomizeSpecialDice[1]]
-        
-        // Grab The Sum Of The Special Dices Using Hash Values
-        specialDiceSum.text = "\(sumOfSpecialDice)"
     }
 }
